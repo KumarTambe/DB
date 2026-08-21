@@ -4,7 +4,7 @@ dotenv.config()
 
 const { Pool } = pg
 
-const pool = new Pool({
+const db = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
@@ -12,4 +12,4 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 })
 
-export default pool
+export default db
