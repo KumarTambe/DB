@@ -131,3 +131,45 @@ SELECT company, COUNT(student_id)
 FROM placements
 GROUP BY company
 HAVING COUNT(student_id) > 1;
+
+
+-- =============================================
+-- DAY 3 — SUBQUERIES AND CASE
+-- =============================================
+
+-- Subquery in WHERE
+SELECT name, cgpa FROM students
+WHERE cgpa > (SELECT AVG(cgpa) FROM students);
+
+-- Subquery with IN
+SELECT name FROM students
+WHERE id IN (SELECT student_id FROM placements);
+
+-- Subquery with NOT IN
+SELECT name FROM students
+WHERE id NOT IN (SELECT student_id FROM placements);
+
+-- Subquery in FROM
+SELECT branch, avg_cgpa
+FROM (
+    SELECT branch, AVG(cgpa) AS avg_cgpa
+    FROM students
+    GROUP BY branch
+) AS branch_stats
+WHERE avg_cgpa > 7.5;
+
+-- CASE
+SELECT name, cgpa,
+    CASE
+        WHEN cgpa >= 9 THEN 'A'
+        WHEN cgpa >= 7 THEN 'B'
+        WHEN cgpa >= 5 THEN 'C'
+        ELSE 'D'
+    END AS grade
+FROM students;
+
+-- CASE with aggregates
+SELECT 
+    COUNT(CASE WHEN is_placed = TRUE THEN 1 END) AS placed,
+    COUNT(CASE WHEN is_placed = FALSE THEN 1 END) AS unplaced
+FROM students;
