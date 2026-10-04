@@ -64,3 +64,70 @@ UPDATE students SET cgpa = 9.0, city = 'Pune' WHERE name = 'Kumar';
 -- DELETE
 DELETE FROM students WHERE id = 1;
 DELETE FROM students WHERE is_placed = TRUE;
+
+
+-- =============================================
+-- DAY 2 — AGGREGATES, GROUP BY, HAVING, JOINS
+-- =============================================
+
+-- AGGREGATES
+SELECT COUNT(*) FROM students;
+SELECT COUNT(city) FROM students;
+SELECT AVG(cgpa) FROM students;
+SELECT MAX(cgpa) FROM students;
+SELECT MIN(cgpa) FROM students;
+SELECT SUM(cgpa) FROM students;
+
+-- GROUP BY
+SELECT branch, COUNT(*) FROM students GROUP BY branch;
+SELECT branch, AVG(cgpa) FROM students GROUP BY branch;
+SELECT city, COUNT(*) FROM students WHERE is_placed = TRUE GROUP BY city;
+
+-- HAVING
+SELECT branch, COUNT(*) FROM students GROUP BY branch HAVING COUNT(*) > 5;
+SELECT branch, AVG(cgpa) FROM students GROUP BY branch HAVING AVG(cgpa) > 7.5;
+
+-- JOINS
+-- INNER JOIN
+SELECT s.name, p.company, p.salary
+FROM students s
+INNER JOIN placements p ON s.id = p.student_id;
+
+-- LEFT JOIN
+SELECT s.name, p.company
+FROM students s
+LEFT JOIN placements p ON s.id = p.student_id;
+
+-- RIGHT JOIN
+SELECT s.name, p.company
+FROM students s
+RIGHT JOIN placements p ON s.id = p.student_id;
+
+-- FULL OUTER JOIN
+SELECT s.name, p.company
+FROM students s
+FULL OUTER JOIN placements p ON s.id = p.student_id;
+
+-- JOIN with WHERE and ORDER BY
+SELECT s.name, p.company, p.salary
+FROM students s
+INNER JOIN placements p ON s.id = p.student_id
+WHERE p.salary > 50000
+ORDER BY p.salary DESC;
+
+-- Unplaced students
+SELECT s.name FROM students s
+LEFT JOIN placements p ON s.id = p.student_id
+WHERE p.company IS NULL;
+
+-- Average salary per branch
+SELECT s.branch, AVG(p.salary)
+FROM students s
+INNER JOIN placements p ON s.id = p.student_id
+GROUP BY s.branch;
+
+-- Companies with more than 1 placement
+SELECT company, COUNT(student_id)
+FROM placements
+GROUP BY company
+HAVING COUNT(student_id) > 1;
